@@ -1,4 +1,122 @@
 
+# ASP.NET Core .gitignore
+# Comprehensive .gitignore for ASP.NET Core Razor Pages applications
 
-#Ignore vscode AI rules
-.github/instructions/codacy.instructions.md
+# Binaries and build outputs
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+*.tmp
+*.temp
+
+# NuGet packages
+packages/
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.svcmap
+
+# Rider
+.idea/
+*.sln.iml
+
+# Logs and diagnostics
+logs/
+*.log
+*.trace
+*.diagnostics
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# Database files
+*.db
+*.mdf
+*.ldf
+*.sdf
+*.sqlite
+*.sqlite3
+
+# Secrets and configuration
+appsettings.*.json
+secrets.json
+*.pfx
+*.p12
+*.cer
+*.key
+
+# Publish outputs
+publish/
+*.publishproj
+
+# Static web assets (if not committed)
+# wwwroot/lib/  # Uncomment if you don't want to commit libraries
+
+# OS generated files
+Thumbs.db
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node.js (if using npm for frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker
+.dockerignore
+
+# Git
+.git/
+.gitignore
+
+# CI/CD
+.github/workflows/
+.github/instructions/  # Specific to this repo, but keeping as is
+
+# Fake (from current .gitignore)
+.fake
+
+# Custom ignores
+# Add any project-specific ignores here
