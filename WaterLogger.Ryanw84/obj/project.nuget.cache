@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "iXRn9Ldq0Uc=",
+  "dgSpecHash": "EuHwI6a/xmM=",
   "success": true,
   "projectFilePath": "/home/ryanw84/Documents/Development/WaterLoggerPractice/WaterLogger.Ryanw84/WaterLogger.Ryanw84.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/ryanw84/.nuget/packages/microsoft.data.sqlite/10.0.2/microsoft.data.sqlite.10.0.2.nupkg.sha512",
+    "/home/ryanw84/.nuget/packages/microsoft.data.sqlite.core/10.0.2/microsoft.data.sqlite.core.10.0.2.nupkg.sha512",
+    "/home/ryanw84/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.11/sqlitepclraw.bundle_e_sqlite3.2.1.11.nupkg.sha512",
+    "/home/ryanw84/.nuget/packages/sqlitepclraw.core/2.1.11/sqlitepclraw.core.2.1.11.nupkg.sha512",
+    "/home/ryanw84/.nuget/packages/sqlitepclraw.lib.e_sqlite3/2.1.11/sqlitepclraw.lib.e_sqlite3.2.1.11.nupkg.sha512",
+    "/home/ryanw84/.nuget/packages/sqlitepclraw.provider.e_sqlite3/2.1.11/sqlitepclraw.provider.e_sqlite3.2.1.11.nupkg.sha512"
+  ],
   "logs": []
 }

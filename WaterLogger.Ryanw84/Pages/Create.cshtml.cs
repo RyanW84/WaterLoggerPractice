@@ -1,20 +1,15 @@
-using System.Data.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Data.Sqlite;
 using WaterLogger.Ryanw84.Models;
 
 namespace WaterLogger.Ryanw84.Pages
 {
     public class Create : PageModel
     {
-        public class CreateModel : PageModel
+        public class CreateModel(IConfiguration configuration) : PageModel
         {
-            private readonly IConfiguration _configuration;
-
-            public CreateModel(IConfiguration configuration)
-            {
-                _configuration = configuration;
-            }
+            private readonly IConfiguration _configuration = configuration;
 
             public IActionResult OnGet()
             {
@@ -22,7 +17,7 @@ namespace WaterLogger.Ryanw84.Pages
             }
 
             [BindProperty]
-            public DrinkingWaterModel DrinkingWater { get; set; }
+            public DrinkingWaterModel? DrinkingWater { get; set; }
 
             public IActionResult OnPost()
             {
@@ -31,16 +26,21 @@ namespace WaterLogger.Ryanw84.Pages
                     return Page();
                 }
 
-                using (var connection = new SqliteConnection(DbConnectionStringBuilder))
+                using (
+                    var connection = new SqliteConnection(
+                        _configuration.GetConnectionString("ConnectionString")
+                    )
+                )
                 {
                     connection.Open();
-                    var tableCmd=connection.CreateCommand();
-                    tableCmd.CommandText=$"INSERT INTO drinking_water(date, quantity) VALUES('{DrinkingWater.Date}, {DrinkingWater.Quantity})";
+                    var tableCmd = connection.CreateCommand();
+                    tableCmd.CommandText =
+                        $"INSERT INTO drinking_water(date, quantity) VALUES('{DrinkingWater.Date}, {DrinkingWater.Quantity})";
 
                     tableCmd.ExecuteNonQuery();
-
-                    connection.Close();
                 }
+
+                return RedirectToPage("./Index");
             }
         }
     }
