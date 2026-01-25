@@ -12,6 +12,7 @@ public class IndexModel(IConfiguration configuration) : PageModel
 
     public void OnGet()
     {
+        CreateTableIfNotExists();
         Records = GetAllRecords();
     }
 
@@ -43,5 +44,22 @@ public class IndexModel(IConfiguration configuration) : PageModel
         }
 
         return tableData;
+    }
+
+    private void CreateTableIfNotExists()
+    {
+        using var connection = new SqliteConnection(
+            _configuration.GetConnectionString("ConnectionString")
+        );
+        connection.Open();
+        var tableCmd = connection.CreateCommand();
+        tableCmd.CommandText = @"
+            CREATE TABLE IF NOT EXISTS drinking_water (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                date TEXT,
+                quantity INTEGER
+            )
+        ";
+        tableCmd.ExecuteNonQuery();
     }
 }
