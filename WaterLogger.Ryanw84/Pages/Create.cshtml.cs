@@ -5,43 +5,40 @@ using WaterLogger.Ryanw84.Models;
 
 namespace WaterLogger.Ryanw84.Pages
 {
-    public class Create : PageModel
+    public class Create(IConfiguration configuration) : PageModel
     {
-        public class CreateModel(IConfiguration configuration) : PageModel
-        {
-            private readonly IConfiguration _configuration = configuration;
+        private readonly IConfiguration _configuration = configuration;
 
-            public IActionResult OnGet()
+        [BindProperty]
+        public DrinkingWaterModel? DrinkingWater { get; set; }
+
+        public IActionResult OnGet()
+        {
+            return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            if (!ModelState.IsValid || DrinkingWater is null)
             {
                 return Page();
             }
 
-            [BindProperty]
-            public DrinkingWaterModel? DrinkingWater { get; set; }
+            using var connection = new SqliteConnection(
+                _configuration.GetConnectionString("ConnectionString")
+            );
 
-            public IActionResult OnPost()
-            {
-                if (!ModelState.IsValid)
-                {
-                    return Page();
-                }
+            connection.Open();
 
-                using (
-                    var connection = new SqliteConnection(
-                        _configuration.GetConnectionString("ConnectionString")
-                    )
-                )
-                {
-                    connection.Open();
-                    var tableCmd = connection.CreateCommand();
-                    tableCmd.CommandText =
-                        $"INSERT INTO drinking_water(date, quantity) VALUES('{DrinkingWater.Date}, {DrinkingWater.Quantity})";
+            using var tableCmd = connection.CreateCommand();
+            tableCmd.CommandText =
+                "INSERT INTO drinking_water(date, quantity) VALUES($date, $quantity)";
+            tableCmd.Parameters.AddWithValue("$date", DrinkingWater.Date);
+            tableCmd.Parameters.AddWithValue("$quantity", DrinkingWater.Quantity);
 
-                    tableCmd.ExecuteNonQuery();
-                }
+            tableCmd.ExecuteNonQuery();
 
-                return RedirectToPage("./Index");
-            }
+            return RedirectToPage("./Index");
         }
     }
 }
