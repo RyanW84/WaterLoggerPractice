@@ -6,17 +6,12 @@ using WaterLogger.Ryanw84.Models;
 
 namespace WaterLogger.Ryanw84.Pages
 {
-    public class DeleteModel : PageModel
+    public class DeleteModel(IConfiguration configuration) : PageModel
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration = configuration;
 
         [BindProperty]
         public DrinkingWaterModel? DrinkingWater { get; set; }
-
-        public DeleteModel(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
 
         public IActionResult OnGet(int id)
         {
