@@ -59,6 +59,8 @@ namespace WaterLogger.Ryanw84.Pages
 
             tableCmd.CommandText = $"DELETE from drinking_water WHERE Id = {id}";
 
+            tableCmd.ExecuteNonQuery();
+
             return RedirectToPage("./Index");
         }
     }
