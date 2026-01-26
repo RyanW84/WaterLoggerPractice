@@ -1,26 +1,67 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Data.Sqlite;
 using WaterLogger.Ryanw84.Models;
 
 namespace WaterLogger.Ryanw84.Pages
 {
-    public class UpdateModel : PageModel
+    public class UpdateModel(IConfiguration configuration) : PageModel
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration = configuration;
 
         [BindProperty]
-        public DrinkingWaterModel DrinkingWater { get; set; }
-
-        public UpdateModel(IConfiguration configuration)
-        {
-            _configuration configuration
-        }
+        public required DrinkingWaterModel DrinkingWater { get; set; }
 
         public IActionResult OnGet(int id)
         {
-            DrinkingWater.GetByID(id);
-
+            DrinkingWater = GetById(id);
             return Page();
+        }
+
+        private DrinkingWaterModel GetById(int id)
+        {
+            var drinkingWaterRecord = new DrinkingWaterModel();
+
+            using var connection = new SqliteConnection(
+                _configuration.GetConnectionString("ConnectionString")
+            );
+            connection.Open();
+            var tableCmd = connection.CreateCommand();
+            tableCmd.CommandText = $"SELECT * FROM drinking_water WHERE Id = {id}";
+
+            using var reader = tableCmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                drinkingWaterRecord.Id = reader.GetInt32(0);
+                drinkingWaterRecord.Date = DateTime.Parse(
+                    reader.GetString(1),
+                    CultureInfo.CurrentUICulture.DateTimeFormat
+                );
+                drinkingWaterRecord.Quantity = reader.GetInt32(2);
+            }
+            return drinkingWaterRecord;
+        }
+
+        public IActionResult OnPost(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            using var connection = new SqliteConnection(
+                _configuration.GetConnectionString("ConnectionString")
+            );
+            connection.Open();
+            var tableCmd = connection.CreateCommand();
+
+            tableCmd.CommandText =
+                $"UPDATE drinking_water SET date = '{DrinkingWater.Date}', quantity = {DrinkingWater.Quantity} WHERE Id = {DrinkingWater.Id}";
+
+            tableCmd.ExecuteNonQuery();
+
+            return RedirectToPage("./Index");
         }
     }
 }
