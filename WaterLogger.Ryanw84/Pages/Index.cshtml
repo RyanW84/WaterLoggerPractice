@@ -5,6 +5,9 @@
 }
 
 <a button type="button" class="btn btn-success" asp-area="" asp-page="/Create">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+  <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 1 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+</svg>
 Add Record
 </a>
 
@@ -32,7 +35,11 @@ Add Record
                         @Html.DisplayFor(modelItem => record.Quantity)
                     </td>
                     <td>
-                        <a button type="button" class="btn btn-danger" asp-page="./Delete" asp-route-id="@record.Id">Delete</a>
+                        <a button type="button" class="btn btn-danger" asp-page="./Delete" asp-route-id="@record.Id">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewbox="0 0 16 16"><path d="m5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0v6a.5.5 0 0 1"></path> </svg>
+                        Delete
+                        </a>
+
                         <a button type="button" class="btn btn-warning" asp-page="./Update" asp-route-id="@record.Id">Update</a>
                         <a button type="button" class="btn btn-info" asp-page="./Edit" asp-route-id="@record.Id">Edit</a>
                     </td>
