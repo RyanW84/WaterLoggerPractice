@@ -1,0 +1,5 @@
+# Ignore Stylelint configuration file from Codacy analysis
+# Codacy doesn't recognize stylelint-scss plugin rules
+.stylelintrc.json
+.stylelintrc*
+stylelint.config.*

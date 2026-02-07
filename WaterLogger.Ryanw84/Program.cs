@@ -1,4 +1,4 @@
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -20,8 +20,3 @@ app.MapStaticAssets();
 app.MapRazorPages().WithStaticAssets();
 
 app.Run();
-//
-//
-//
-//
-//

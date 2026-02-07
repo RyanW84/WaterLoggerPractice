@@ -1,6 +1,3 @@
-html {
-  font-size: 14px;
-}
 
 @media (min-width: 768px) {
   html {
@@ -21,50 +18,68 @@ body {
   margin-bottom: 60px;
 }
 
-.logo{
+#records {
+  --bs-table-bg: transparent;
+  --bs-table-accent-bg: transparent;
+  --bs-table-striped-bg: transparent;
+  --bs-table-hover-bg: transparent;
+}
+
+.logo {
   width: 80px;
 }
 
-.background{
-  position: relative ;
+.background {
+  position: relative;
   z-index: 1;
   height: 100vh;
 }
 
-.background::before{
+.background::before {
   content: "";
-position: absolute;
-top:0;
-left:0;  
-width: 100%;
-height: 100%;
-background-image: url(https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);
-background-size: cover;
-background-position: center;
-filter: brightness(60%);
-z-index: -1;
-opacity: 0.5;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+  background-size: cover;
+  background-position: center;
+  filter: brightness(60%);
+  z-index: -1;
+  opacity: 0.5;
 }
 
-.btn-danger{
+.btn-danger {
   background-color: #5c5c5c;
   border: none;
 }
 
-.btn-primary{
+.btn-primary {
   background-color: white;
   border: none;
 }
 
-.btn-success{
+.btn-success {
   background-color: #15446c;
   border: none;
 }
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
+
+.form-group .form-control {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--bs-secondary-color);
+  border-radius: 0;
+  margin-bottom: 20px;
+}
+
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+  background-color: transparent;
   text-align: end;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
