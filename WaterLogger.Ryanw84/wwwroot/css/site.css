@@ -46,15 +46,27 @@ body {
 }
 
 .btn-primary {
-    background-color: white;
+    background-color: #15446c;
     border: none;
-    color: #15446c;
+    color: white;
 }
 
 .btn-success {
     background-color: #15446c;
     border: none;
 }
+
+.table {
+    background-color: transparent !important;
+}
+
+    .table thead,
+    .table tbody,
+    .table tr,
+    .table th,
+    .table td {
+        background-color: transparent !important;
+    }
 
 .form-group {
     margin-bottom: 20px;
