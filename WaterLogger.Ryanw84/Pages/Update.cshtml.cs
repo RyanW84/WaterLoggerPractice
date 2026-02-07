@@ -15,13 +15,18 @@ namespace WaterLogger.Ryanw84.Pages
 
         public IActionResult OnGet(int id)
         {
-            DrinkingWater = GetById(id);
+            var drinkingWater = GetById(id);
+            if (drinkingWater is null)
+            {
+                return NotFound();
+            }
+            DrinkingWater = drinkingWater;
             return Page();
         }
 
-        private DrinkingWaterModel GetById(int id)
+        private DrinkingWaterModel? GetById(int id)
         {
-            var drinkingWaterRecord = new DrinkingWaterModel();
+            DrinkingWaterModel? drinkingWaterRecord = null;
 
             using var connection = new SqliteConnection(
                 _configuration.GetConnectionString("ConnectionString")

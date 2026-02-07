@@ -3,11 +3,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.Sqlite;
 using WaterLogger.Ryanw84.Models;
 
-[assembly: CLSCompliant(true)]
-
 namespace WaterLogger.Ryanw84.Pages;
 
-[CLSCompliant(false)]
 public class IndexModel(IConfiguration configuration) : PageModel
 {
     private readonly IConfiguration _configuration = configuration;
@@ -17,6 +14,7 @@ public class IndexModel(IConfiguration configuration) : PageModel
     {
         CreateTableIfNotExists();
         Records = GetAllRecords();
+        ViewData["Total"] = Records.AsEnumerable().Sum(x => x.Quantity);
     }
 
     private List<DrinkingWaterModel> GetAllRecords()
