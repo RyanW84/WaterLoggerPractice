@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.Sqlite;
 using WaterLogger.Ryanw84.Models;
 
+[assembly: CLSCompliant(true)]
+
 namespace WaterLogger.Ryanw84.Pages;
 
+[CLSCompliant(false)]
 public class IndexModel(IConfiguration configuration) : PageModel
 {
     private readonly IConfiguration _configuration = configuration;
@@ -53,7 +56,8 @@ public class IndexModel(IConfiguration configuration) : PageModel
         );
         connection.Open();
         var tableCmd = connection.CreateCommand();
-        tableCmd.CommandText = @"
+        tableCmd.CommandText =
+            @"
             CREATE TABLE IF NOT EXISTS drinking_water (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 date TEXT,

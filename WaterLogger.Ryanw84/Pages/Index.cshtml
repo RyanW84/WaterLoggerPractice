@@ -10,6 +10,8 @@
 </svg>
 Add Record
 </a>
+<button type="button" class="btn btn-success" onclick="calculate()">Calculate Total</button>
+
 
 @if (Model.Records != null && Model.Records.Any())
 {
@@ -51,6 +53,8 @@ Add Record
             }
          </tbody>
     </table>
+
+    <p id="result"></p>
 }
 else
 {

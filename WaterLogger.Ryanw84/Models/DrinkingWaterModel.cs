@@ -7,8 +7,4 @@ namespace WaterLogger.Ryanw84.Models
         public int Quantity { get; set; }
     }
 }
-//
-///
-//
-///
-///
+
