@@ -3,6 +3,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <CLSCompliant>false</CLSCompliant>
+    <NoWarn>CS3009;CS3002</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

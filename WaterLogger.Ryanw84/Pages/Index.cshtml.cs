@@ -39,7 +39,7 @@ public class IndexModel(IConfiguration configuration) : PageModel
                         reader.GetString(1),
                         CultureInfo.CurrentUICulture.DateTimeFormat
                     ),
-                    Quantity = reader.GetInt32(2),
+                    Quantity = reader.GetFloat(2),
                 }
             );
         }
@@ -59,7 +59,7 @@ public class IndexModel(IConfiguration configuration) : PageModel
             CREATE TABLE IF NOT EXISTS drinking_water (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 date TEXT,
-                quantity INTEGER
+                quantity FLOAT
             )
         ";
         tableCmd.ExecuteNonQuery();

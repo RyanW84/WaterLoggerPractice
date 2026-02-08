@@ -15,7 +15,7 @@ namespace WaterLogger.Ryanw84.Pages
 
         public IActionResult OnGet(int id)
         {
-            var drinkingWater = GetById(id);
+            DrinkingWaterModel? drinkingWater = GetById(id);
             if (drinkingWater is null)
             {
                 return NotFound();
@@ -32,19 +32,20 @@ namespace WaterLogger.Ryanw84.Pages
                 _configuration.GetConnectionString("ConnectionString")
             );
             connection.Open();
-            var tableCmd = connection.CreateCommand();
+            SqliteCommand tableCmd = connection.CreateCommand();
             tableCmd.CommandText = $"SELECT * FROM drinking_water WHERE Id = {id}";
 
-            using var reader = tableCmd.ExecuteReader();
+            using SqliteDataReader reader = tableCmd.ExecuteReader();
 
-            while (reader.Read())
+            if (reader.Read())
             {
-                drinkingWaterRecord.Id = reader.GetInt32(0);
+                drinkingWaterRecord = new DrinkingWaterModel();
+                drinkingWaterRecord.Id = (int)reader.GetInt32(0);
                 drinkingWaterRecord.Date = DateTime.Parse(
                     reader.GetString(1),
                     CultureInfo.CurrentUICulture.DateTimeFormat
                 );
-                drinkingWaterRecord.Quantity = reader.GetInt32(2);
+                drinkingWaterRecord.Quantity = reader.GetFloat(2);
             }
             return drinkingWaterRecord;
         }
@@ -59,7 +60,7 @@ namespace WaterLogger.Ryanw84.Pages
                 _configuration.GetConnectionString("ConnectionString")
             );
             connection.Open();
-            var tableCmd = connection.CreateCommand();
+            SqliteCommand tableCmd = connection.CreateCommand();
 
             tableCmd.CommandText =
                 $"UPDATE drinking_water SET date = '{DrinkingWater.Date}', quantity = {DrinkingWater.Quantity} WHERE Id = {DrinkingWater.Id}";
