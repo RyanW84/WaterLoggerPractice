@@ -1,73 +1,108 @@
-using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.Sqlite;
 using WaterLogger.Ryanw84.Models;
 
-namespace WaterLogger.Ryanw84.Pages
+namespace WaterLogger.Ryanw84.Pages;
+
+public class UpdateModel : PageModel
 {
-    public class UpdateModel(IConfiguration configuration) : PageModel
+    private readonly IConfiguration _configuration;
+
+    public UpdateModel(IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration = configuration;
+        _configuration = configuration;
+    }
 
-        [BindProperty]
-        public required DrinkingWaterModel DrinkingWater { get; set; }
+    [BindProperty]
+    public DrinkingWaterModel DrinkingWater { get; set; } = new();
 
-        public IActionResult OnGet(int id)
+    public async Task<IActionResult> OnGet(int id)
+    {
+        await CreateTableIfNotExists();
+        var record = await GetById(id);
+        if (record == null)
         {
-            DrinkingWaterModel? drinkingWater = GetById(id);
-            if (drinkingWater is null)
-            {
-                return NotFound();
-            }
-            DrinkingWater = drinkingWater;
+            return NotFound();
+        }
+        DrinkingWater = record;
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPost()
+    {
+        if (!ModelState.IsValid)
+        {
             return Page();
         }
 
-        private DrinkingWaterModel? GetById(int id)
+        await CreateTableIfNotExists();
+
+        using var connection = new SqliteConnection(
+            _configuration.GetConnectionString("ConnectionString")
+        );
+        await connection.OpenAsync();
+        var command = connection.CreateCommand();
+        command.CommandText =
+            "UPDATE drinking_water SET date = $date, quantity = $quantity, measure = $measure WHERE Id = $id";
+        command.Parameters.AddWithValue("$id", DrinkingWater.Id);
+        command.Parameters.AddWithValue("$date", DrinkingWater.Date.ToString("yyyy-MM-dd"));
+        command.Parameters.AddWithValue("$quantity", DrinkingWater.Quantity);
+        command.Parameters.AddWithValue("$measure", DrinkingWater.Measure);
+        await command.ExecuteNonQueryAsync();
+
+        return RedirectToPage("./Index");
+    }
+
+    private async Task<DrinkingWaterModel?> GetById(int id)
+    {
+        using var connection = new SqliteConnection(
+            _configuration.GetConnectionString("ConnectionString")
+        );
+        await connection.OpenAsync();
+        var command = connection.CreateCommand();
+        command.CommandText = "SELECT * FROM drinking_water WHERE Id = $id";
+        command.Parameters.AddWithValue("$id", id);
+        var reader = await command.ExecuteReaderAsync();
+        if (await reader.ReadAsync())
         {
-            DrinkingWaterModel? drinkingWaterRecord = null;
-
-            using var connection = new SqliteConnection(
-                _configuration.GetConnectionString("ConnectionString")
-            );
-            connection.Open();
-            SqliteCommand tableCmd = connection.CreateCommand();
-            tableCmd.CommandText = $"SELECT * FROM drinking_water WHERE Id = {id}";
-
-            using SqliteDataReader reader = tableCmd.ExecuteReader();
-
-            if (reader.Read())
+            return new DrinkingWaterModel
             {
-                drinkingWaterRecord = new DrinkingWaterModel();
-                drinkingWaterRecord.Id = (int)reader.GetInt32(0);
-                drinkingWaterRecord.Date = DateTime.Parse(
-                    reader.GetString(1),
-                    CultureInfo.CurrentUICulture.DateTimeFormat
-                );
-                drinkingWaterRecord.Quantity = reader.GetFloat(2);
-            }
-            return drinkingWaterRecord;
+                Id = reader.GetInt32(0),
+                Date = DateOnly.Parse(reader.GetString(1)).ToDateTime(TimeOnly.MinValue),
+                Quantity = reader.GetInt32(2),
+                Measure = reader.IsDBNull(3) ? null : reader.GetString(3),
+            };
         }
+        return null;
+    }
 
-        public IActionResult OnPost(int id)
+    private async Task CreateTableIfNotExists()
+    {
+        using var connection = new SqliteConnection(_configuration.GetConnectionString("ConnectionString"));
+        await connection.OpenAsync();
+        var command = connection.CreateCommand();
+        command.CommandText = "CREATE TABLE IF NOT EXISTS drinking_water (Id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, quantity INTEGER, measure TEXT)";
+        await command.ExecuteNonQueryAsync();
+
+        // Check if measure column exists
+        command.CommandText = "PRAGMA table_info(drinking_water)";
+        var reader = await command.ExecuteReaderAsync();
+        bool hasMeasure = false;
+        while (await reader.ReadAsync())
         {
-            if (!ModelState.IsValid)
+            if (reader.GetString(1) == "measure")
             {
-                return Page();
+                hasMeasure = true;
+                break;
             }
-            using var connection = new SqliteConnection(
-                _configuration.GetConnectionString("ConnectionString")
-            );
-            connection.Open();
-            SqliteCommand tableCmd = connection.CreateCommand();
+        }
+        reader.Close();
 
-            tableCmd.CommandText =
-                $"UPDATE drinking_water SET date = '{DrinkingWater.Date}', quantity = {DrinkingWater.Quantity} WHERE Id = {DrinkingWater.Id}";
-
-            tableCmd.ExecuteNonQuery();
-
-            return RedirectToPage("./Index");
+        if (!hasMeasure)
+        {
+            command.CommandText = "ALTER TABLE drinking_water ADD COLUMN measure TEXT";
+            await command.ExecuteNonQueryAsync();
         }
     }
 }

@@ -32,9 +32,10 @@ namespace WaterLogger.Ryanw84.Pages
 
             using var tableCmd = connection.CreateCommand();
             tableCmd.CommandText =
-                "INSERT INTO drinking_water(date, quantity) VALUES($date, $quantity)";
+                "INSERT INTO drinking_water(date, quantity, measure) VALUES($date, $quantity, $measure)";
             tableCmd.Parameters.AddWithValue("$date", DrinkingWater.Date);
             tableCmd.Parameters.AddWithValue("$quantity", DrinkingWater.Quantity);
+            tableCmd.Parameters.AddWithValue("$measure", DrinkingWater.Measure);
 
             tableCmd.ExecuteNonQuery();
 

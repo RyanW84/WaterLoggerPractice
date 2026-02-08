@@ -40,6 +40,7 @@ public class IndexModel(IConfiguration configuration) : PageModel
                         CultureInfo.CurrentUICulture.DateTimeFormat
                     ),
                     Quantity = reader.GetFloat(2),
+                    Measure = reader.IsDBNull(3) ? null : reader.GetString(3),
                 }
             );
         }
@@ -59,9 +60,22 @@ public class IndexModel(IConfiguration configuration) : PageModel
             CREATE TABLE IF NOT EXISTS drinking_water (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 date TEXT,
-                quantity FLOAT
+                quantity FLOAT,
+                measure TEXT
             )
         ";
         tableCmd.ExecuteNonQuery();
+
+        // Add measure column if it doesn't exist (for existing databases)
+        var alterCmd = connection.CreateCommand();
+        alterCmd.CommandText = "ALTER TABLE drinking_water ADD COLUMN measure TEXT";
+        try
+        {
+            alterCmd.ExecuteNonQuery();
+        }
+        catch (SqliteException)
+        {
+            // Column already exists, ignore
+        }
     }
 }

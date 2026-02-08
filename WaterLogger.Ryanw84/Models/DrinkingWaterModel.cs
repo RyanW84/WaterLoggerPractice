@@ -11,5 +11,8 @@ namespace WaterLogger.Ryanw84.Models
 
         [Range(0, float.MaxValue, ErrorMessage = "Value for {0} must be a positive.")]
         public float Quantity { get; set; }
+
+        [Required]
+        public string? Measure { get; set; }
     }
 }
