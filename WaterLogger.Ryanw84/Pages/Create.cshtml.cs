@@ -12,7 +12,7 @@ namespace WaterLogger.Ryanw84.Pages
         [BindProperty]
         public DrinkingWaterModel? DrinkingWater { get; set; }
 
-        public IActionResult OnGet()
+        public IActionResult OnGet() //
         {
             return Page();
         }
