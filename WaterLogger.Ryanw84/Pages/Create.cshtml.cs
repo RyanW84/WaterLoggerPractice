@@ -1,43 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Data.Sqlite;
+using WaterLogger.Ryanw84.Data;
 using WaterLogger.Ryanw84.Models;
 
 namespace WaterLogger.Ryanw84.Pages
 {
-    public class Create(IConfiguration configuration) : PageModel
+    public class Create(WaterLoggerContext db) : PageModel
     {
-        private readonly IConfiguration _configuration = configuration;
+        private readonly WaterLoggerContext _db = db;
 
         [BindProperty]
         public DrinkingWaterModel? DrinkingWater { get; set; }
 
-        public IActionResult OnGet() //
+        public IActionResult OnGet()
         {
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid || DrinkingWater is null)
             {
                 return Page();
             }
 
-            using var connection = new SqliteConnection(
-                _configuration.GetConnectionString("ConnectionString")
-            );
-
-            connection.Open();
-
-            using var tableCmd = connection.CreateCommand();
-            tableCmd.CommandText =
-                "INSERT INTO drinking_water(date, quantity, measure) VALUES($date, $quantity, $measure)";
-            tableCmd.Parameters.AddWithValue("$date", DrinkingWater.Date);
-            tableCmd.Parameters.AddWithValue("$quantity", DrinkingWater.Quantity);
-            tableCmd.Parameters.AddWithValue("$measure", DrinkingWater.Measure);
-
-            tableCmd.ExecuteNonQuery();
+            // Add() stages the new record in EF's change tracker.
+            // SaveChangesAsync() translates that to: INSERT INTO drinking_water (...) VALUES (...)
+            _db.DrinkingWater.Add(DrinkingWater);
+            await _db.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

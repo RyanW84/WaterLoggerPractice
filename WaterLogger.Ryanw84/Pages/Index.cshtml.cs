@@ -1,81 +1,52 @@
-using System.Globalization;
+using ClosedXML.Excel;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Data.Sqlite;
+using WaterLogger.Ryanw84.Data;
 using WaterLogger.Ryanw84.Models;
 
 namespace WaterLogger.Ryanw84.Pages;
 
-public class IndexModel(IConfiguration configuration) : PageModel
+public class IndexModel(WaterLoggerContext db) : PageModel
 {
-    private readonly IConfiguration _configuration = configuration;
+    private readonly WaterLoggerContext _db = db;
     public List<DrinkingWaterModel>? Records { get; set; }
 
     public void OnGet()
     {
-        CreateTableIfNotExists();
-        Records = GetAllRecords();
-        ViewData["Total"] = Records.AsEnumerable().Sum(x => x.Quantity);
+        Records = _db.DrinkingWater.ToList();
+        ViewData["Total"] = Records.Sum(x => x.Quantity);
     }
 
-    private List<DrinkingWaterModel> GetAllRecords()
+    public IActionResult OnGetExport()
     {
-        using var connection = new SqliteConnection(
-            _configuration.GetConnectionString("ConnectionString")
-        );
-        connection.Open();
-        var tableCmd = connection.CreateCommand();
-        tableCmd.CommandText = $"SELECT * FROM drinking_water";
+        var records = _db.DrinkingWater.ToList();
 
-        var tableData = new List<DrinkingWaterModel>();
-        SqliteDataReader reader = tableCmd.ExecuteReader();
+        using var workbook = new XLWorkbook();
+        var sheet = workbook.Worksheets.Add("Water Log");
 
-        while (reader.Read())
+        sheet.Cell(1, 1).Value = "Date";
+        sheet.Cell(1, 2).Value = "Quantity";
+        sheet.Cell(1, 3).Value = "Measure";
+
+        var headerRow = sheet.Row(1);
+        headerRow.Style.Font.Bold = true;
+
+        for (int i = 0; i < records.Count; i++)
         {
-            tableData.Add(
-                new DrinkingWaterModel
-                {
-                    Id = reader.GetInt32(0),
-                    Date = DateTime.Parse(
-                        reader.GetString(1),
-                        CultureInfo.CurrentUICulture.DateTimeFormat
-                    ),
-                    Quantity = reader.GetFloat(2),
-                    Measure = reader.IsDBNull(3) ? null : reader.GetString(3),
-                }
-            );
+            sheet.Cell(i + 2, 1).Value = records[i].Date.ToString("dd-MM-yyyy");
+            sheet.Cell(i + 2, 2).Value = records[i].Quantity;
+            sheet.Cell(i + 2, 3).Value = records[i].Measure;
         }
 
-        return tableData;
-    }
+        sheet.Columns().AdjustToContents();
 
-    private void CreateTableIfNotExists()
-    {
-        using var connection = new SqliteConnection(
-            _configuration.GetConnectionString("ConnectionString")
-        );
-        connection.Open();
-        var tableCmd = connection.CreateCommand();
-        tableCmd.CommandText =
-            @"
-            CREATE TABLE IF NOT EXISTS drinking_water (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                date TEXT,
-                quantity FLOAT,
-                measure TEXT
-            )
-        ";
-        tableCmd.ExecuteNonQuery();
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
 
-        // Add measure column if it doesn't exist (for existing databases)
-        var alterCmd = connection.CreateCommand();
-        alterCmd.CommandText = "ALTER TABLE drinking_water ADD COLUMN measure TEXT";
-        try
-        {
-            alterCmd.ExecuteNonQuery();
-        }
-        catch (SqliteException)
-        {
-            // Column already exists, ignore
-        }
+        return File(
+            stream.ToArray(),
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "WaterLog.xlsx");
     }
 }

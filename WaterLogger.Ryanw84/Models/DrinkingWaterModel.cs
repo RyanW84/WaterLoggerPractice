@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WaterLogger.Ryanw84.Models
 {
+    [Table("drinking_water")]
     public class DrinkingWaterModel
     {
         public int Id { get; set; }
