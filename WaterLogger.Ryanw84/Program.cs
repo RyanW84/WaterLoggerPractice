@@ -9,7 +9,8 @@ builder.Services.AddRazorPages();
 // Register the DbContext with the SQLite provider.
 // "ConnectionString" matches the key in appsettings.json — no change needed there.
 builder.Services.AddDbContext<WaterLoggerContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionString")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionString"))
+);
 
 var app = builder.Build();
 
@@ -37,4 +38,3 @@ app.MapRazorPages().WithStaticAssets();
 
 app.Run();
 
-//

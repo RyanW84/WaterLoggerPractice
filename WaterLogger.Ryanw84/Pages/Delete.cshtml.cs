@@ -15,7 +15,7 @@ namespace WaterLogger.Ryanw84.Pages
         public async Task<IActionResult> OnGetAsync(int id)
         {
             // FindAsync() translates to: SELECT * FROM drinking_water WHERE Id = @id
-            
+
             // It also checks EF's local cache first before hitting the database.
             DrinkingWater = await _db.DrinkingWater.FindAsync(id);
             if (DrinkingWater is null)

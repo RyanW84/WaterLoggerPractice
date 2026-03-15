@@ -47,6 +47,7 @@ public class IndexModel(WaterLoggerContext db) : PageModel
         return File(
             stream.ToArray(),
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "WaterLog.xlsx");
+            "WaterLog.xlsx"
+        );
     }
 }

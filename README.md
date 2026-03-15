@@ -1,6 +1,8 @@
 # Water Drinking Logger
 
-A web-based CRUD application for tracking daily water intake, built with ASP.NET Core Razor Pages and SQLite. Submitted as a solution to [The C# Academy — Project #24: Water Drinking Logger](https://thecsharpacademy.com/project/24/water-drinking-logger).
+A web-based CRUD application for tracking daily water intake, built with
+ASP.NET Core Razor Pages and SQLite. Submitted as a solution to the
+[C# Academy — Project #24: Water Drinking Logger](https://thecsharpacademy.com/project/24/water-drinking-logger).
 
 ---
 
@@ -17,7 +19,7 @@ A web-based CRUD application for tracking daily water intake, built with ASP.NET
 ## Project Requirements & How They Are Met
 
 | Requirement | Implementation |
-|---|---|
+| --- | --- |
 | This is a web application | ASP.NET Core Razor Pages web app |
 | Users should be able to insert, delete, update and view their drinking water | Full CRUD via Create, Delete, Update, Index Razor Pages |
 | You should use Entity Framework Core as your ORM | `WaterLoggerContext` extends `DbContext`; all DB operations use EF Core LINQ methods |
@@ -26,7 +28,10 @@ A web-based CRUD application for tracking daily water intake, built with ASP.NET
 
 ### Challenge — Export to Excel
 
-The application includes an **Export to Spreadsheet** button on the Index page. Clicking it downloads a `WaterLog.xlsx` file containing all logged records, with a bold header row and auto-fitted column widths. This is implemented via the `OnGetExport()` handler in `Index.cshtml.cs` using the **ClosedXML** library.
+The application includes an **Export to Spreadsheet** button on the Index page.
+Clicking it downloads a `WaterLog.xlsx` file containing all logged records, with
+a bold header row and auto-fitted column widths. This is implemented via the
+`OnGetExport()` handler in `Index.cshtml.cs` using the **ClosedXML** library.
 
 ---
 
@@ -35,14 +40,14 @@ The application includes an **Export to Spreadsheet** button on the Index page. 
 ### Framework & Runtime
 
 | Tool | Version | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | [.NET](https://dotnet.microsoft.com/) | 10.0 | Runtime and SDK |
 | [ASP.NET Core Razor Pages](https://learn.microsoft.com/aspnet/core/razor-pages/) | 10.0 | Web framework and page routing |
 
 ### NuGet Packages
 
 | Package | Version | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | [Microsoft.EntityFrameworkCore.Sqlite](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.Sqlite) | 9.0.3 | EF Core provider for SQLite |
 | [Microsoft.EntityFrameworkCore.Design](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.Design) | 9.0.3 | Design-time EF Core tools (migrations) |
 | [ClosedXML](https://www.nuget.org/packages/ClosedXML) | 0.105.0 | Generate `.xlsx` Excel files |
@@ -50,7 +55,7 @@ The application includes an **Export to Spreadsheet** button on the Index page. 
 ### Frontend Libraries (bundled via `wwwroot/lib/`)
 
 | Library | Purpose |
-|---|---|
+| --- | --- |
 | [Bootstrap 5](https://getbootstrap.com/) | Responsive layout and button styles |
 | [jQuery](https://jquery.com/) | DOM manipulation |
 | [jQuery Validation](https://jqueryvalidation.org/) | Client-side form validation |
@@ -59,13 +64,13 @@ The application includes an **Export to Spreadsheet** button on the Index page. 
 ### Database
 
 | Tool | Purpose |
-|---|---|
+| --- | --- |
 | [SQLite](https://www.sqlite.org/) | Embedded, file-based relational database (no server required) |
 
 ### VS Code Extensions (recommended)
 
 | Extension | Purpose |
-|---|---|
+| --- | --- |
 | [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) | C# language support, IntelliSense, debugging |
 | [SQLite Viewer](https://marketplace.visualstudio.com/items?itemName=qwtel.sqlite-viewer) | Browse the SQLite database file directly in VS Code |
 
@@ -81,13 +86,17 @@ The application includes an **Export to Spreadsheet** button on the Index page. 
 ### Windows
 
 - Windows 10 / 11 (x64)
-- [Visual Studio 2022](https://visualstudio.microsoft.com/) (with **ASP.NET and web development** workload) **or** [VS Code](https://code.visualstudio.com/) with the C# Dev Kit extension
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) (with **ASP.NET and
+  web development** workload) **or** [VS Code](https://code.visualstudio.com/)
+  with the C# Dev Kit extension
 
 ### Linux
 
 - Any modern distro (Ubuntu 20.04+, Fedora 36+, Arch, etc.)
-- [VS Code](https://code.visualstudio.com/) with the C# Dev Kit extension (recommended)
-- `libssl` and `libicu` — usually pre-installed; if missing, install via your package manager
+- [VS Code](https://code.visualstudio.com/) with the C# Dev Kit extension
+  (recommended)
+- `libssl` and `libicu` — usually pre-installed; if missing, install via your
+  package manager
 
 ---
 
@@ -112,9 +121,12 @@ dotnet restore WaterLogger.Ryanw84/WaterLogger.Ryanw84.csproj
 dotnet run --project WaterLogger.Ryanw84/WaterLogger.Ryanw84.csproj
 ```
 
-The app will start and print the local URL (usually `http://localhost:5000`). Open it in your browser.
+The app will start and print the local URL (usually `http://localhost:5000`).
+Open it in your browser.
 
-> **Note:** The SQLite database file is created automatically at `WaterLogger.Ryanw84/DB/drinking_water` on first run — no manual setup required.
+> **Note:** The SQLite database file is created automatically at
+> `WaterLogger.Ryanw84/DB/drinking_water` on first run — no manual setup
+> required.
 
 ### Windows — running via Visual Studio
 
@@ -124,7 +136,7 @@ The app will start and print the local URL (usually `http://localhost:5000`). Op
 ### Linux — common issues
 
 | Issue | Fix |
-|---|---|
+| --- | --- |
 | `dotnet: command not found` | Install the .NET 10 SDK from [dotnet.microsoft.com](https://dotnet.microsoft.com/download) and ensure `~/.dotnet/tools` or `/usr/share/dotnet` is on your `PATH` |
 | `libssl` errors on older distros | `sudo apt install libssl-dev libicu-dev` (Debian/Ubuntu) |
 | Port already in use | Change the port: `dotnet run --urls "http://localhost:5001"` |
@@ -133,7 +145,7 @@ The app will start and print the local URL (usually `http://localhost:5000`). Op
 
 ## Project Structure
 
-```
+```text
 WaterLoggerPractice/
 └── WaterLogger.Ryanw84/
     ├── Data/
@@ -159,7 +171,7 @@ WaterLoggerPractice/
 ## Usage
 
 | Action | How |
-|---|---|
+| --- | --- |
 | Add a record | Click **Add Record**, fill in the date, quantity, and measure, then submit |
 | Edit a record | Click the **pencil icon** on any row |
 | Delete a record | Click the **trash icon** on any row and confirm |
